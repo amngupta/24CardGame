@@ -3,35 +3,39 @@ package client;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.IOException;
+import java.rmi.RemoteException;
+import java.util.HashMap;
+import java.util.Map;
 
 import javax.swing.*;
 
 import records.UserInfo;
 import server.RMIServerInterface;
 
-public class HomeFrame implements Runnable {
+public class HomeFrame extends JFrame implements Runnable {
 
-	private JFrame frame;
 	private JPanel menuPanel;
 	private UserInfo currentUser;
 	private RMIServerInterface serverObj;
-	private UserInfoPage userInfoPage;
-	private LeaderBoard leaderboardPage;
-	
+	private GameClientStub gameClientStub;
+	private Map<String, SubPanel> panelsMap;
 	
 	public HomeFrame(RMIServerInterface serverObj, UserInfo currentUser) {
 		// TODO Auto-generated constructor stub
 		this.serverObj = serverObj;
 		this.currentUser = currentUser;
+		this.panelsMap = new HashMap<>();
+		this.gameClientStub = new GameClientStub(currentUser);
+		this.initializePanels();
+		this.gameClientStub.setCardGameClient((CardGameClient) this.panelsMap.get("gameWindow"));
 	}
 
 	@Override
 	public void run() {
 		// TODO Auto-generated method stub
-		frame = new JFrame();
-		frame.setBounds(100, 100, 500, 400);
-		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		frame.getContentPane().setLayout(new BoxLayout(frame.getContentPane(), BoxLayout.Y_AXIS));
+		setBounds(100, 100, 500, 400);
+		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		getContentPane().setLayout(new BoxLayout(this.getContentPane(), BoxLayout.Y_AXIS));
 		menuPanel = new JPanel();
 		menuPanel.setLayout(new BoxLayout(menuPanel, BoxLayout.X_AXIS));		
 		
@@ -47,6 +51,15 @@ public class HomeFrame implements Runnable {
 		JButton logoutButton = new JButton("Logout");
 		menuPanel.add(logoutButton);
 		//		infoPanel.setVisible(true);
+		
+		playButton.addActionListener(new ActionListener() {
+			@Override 
+			public void actionPerformed(ActionEvent arg0) {
+				showPanel("gameEndWindow");
+			}
+		});
+		
+		
 		logoutButton.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
@@ -55,74 +68,78 @@ public class HomeFrame implements Runnable {
 				} catch (IOException e) {
 					e.printStackTrace();
 				}
-				frame.dispose();
+				dispose();
 				System.exit(0);
 			}			
 		});
+		
 		leaderButton.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent event) {
-				showLeaderBoard();
+				showPanel("leaderboard");		
 			}			
 		});
 		
 		profileButton.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent event) {
-				showInfoPage();
+				showPanel("userInfo");		
 			}			
 		});
 		
-		frame.getContentPane().add(menuPanel);
-		frame.setVisible(true);
-		showInfoPage();
+		getContentPane().add(menuPanel);
+		setVisible(true);
+		showPanel("userInfo");		
 	}
 	
-	public void showInfoPage()
-	{
-		System.out.println("Calling InfoPage");
-		hideAllPages();
-		if (userInfoPage == null)
-		{
-			userInfoPage = new UserInfoPage(serverObj, currentUser, frame);
-			SwingUtilities.invokeLater(userInfoPage);
+	private void initializePanels() {
+		SubPanel userInfoPage = new UserInfoPage(serverObj, currentUser, this);
+		this.panelsMap.put("userInfo", userInfoPage);
+		SwingUtilities.invokeLater(userInfoPage);
+		
+		try {
+			SubPanel leaderboardPage = new LeaderBoard(serverObj.getUserStats(), this);
+			this.panelsMap.put("leaderboard", leaderboardPage);
+			SwingUtilities.invokeLater(leaderboardPage);
+
+		} catch (RemoteException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
 		}
-		else 
-		{
-			userInfoPage.setVisible(true);
-		}
+		
+		SubPanel gameWindow = new CardGameClient(currentUser, this.gameClientStub, this);
+		this.panelsMap.put("gameWindow", gameWindow);
+		SwingUtilities.invokeLater(gameWindow);
+		
+		SubPanel gameEnd = new GameEnd(currentUser, this.gameClientStub, this);
+		this.panelsMap.put("gameEndWindow", gameEnd);
+		SwingUtilities.invokeLater(gameEnd);
 	}
-	
-	private void hideAllPages()
+
+	public void showPanel(String panel)
 	{
-		if (leaderboardPage != null)
-			leaderboardPage.setVisible(false);
-		if (userInfoPage != null)
-			userInfoPage.setVisible(false);
-	}
-	
-	public void showLeaderBoard() 
-	{
-		System.out.println("Calling Leaderboard");
-		hideAllPages();
-		if (leaderboardPage == null)
-		{
-			try {
-				leaderboardPage = new LeaderBoard(serverObj.getUserStats(), frame);
-				SwingUtilities.invokeLater(leaderboardPage);
-				leaderboardPage.setVisible(true);
-			}
-			catch(Exception e)
+		this.panelsMap.forEach((k, v)->{
+			if (k.equals(panel))
 			{
-				e.printStackTrace();
-				String message = "Unable to fetch leaderboard";
-			    JOptionPane.showMessageDialog(new JFrame(), message, "Dialog",
-			            JOptionPane.ERROR_MESSAGE);
-			}	
-		}
-		else
-		{
-			leaderboardPage.setVisible(true);
-		}
+				v.refreshInfo();
+				v.showPanel();
+			}
+			else
+			{
+				v.hidePanel();
+			}
+		});
 	}
+	
+	public void hidePanel(String panel)
+	{
+		this.panelsMap.get(panel).hidePanel();
+	}
+	
+	public SubPanel getPanel(String panelName)
+	{
+		return panelsMap.get(panelName);
+	}
+	
+	
 }

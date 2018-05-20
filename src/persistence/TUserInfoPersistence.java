@@ -11,6 +11,7 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 import records.UserInfo;
 import records.UserStatistics;
@@ -82,6 +83,45 @@ public class TUserInfoPersistence implements UserInfoPersistence {
 			statsList.add(userObj.getUserStats());
 		});
 		return statsList;
+	}
+
+	@Override
+	public void updateUser(UserInfo user) throws IOException {
+//		UserInfo test = searchUser(user.getUsername());
+//		System.out.println("Registering User Now...");
+//		if (test != null)
+//		{
+////			List<String> userInfo = Collections.singletonList(user.getUsername() + " " + user.getPassword());
+////			try {
+////				Files.write(file, userInfo, ENCODING, StandardOpenOption.APPEND);
+////				userInfoMap.put(user.getUsername(), user);
+////			} catch (IOException e) {
+////				e.printStackTrace();
+////			}
+//		}
+//		
+//		
+//		if (userInfoMap.containsKey(user.getUsername()))
+//		{
+//			List<String> usersInfoList, newUsersInfoList;
+//			usersInfoList = Files.readAllLines(file, ENCODING);
+//			newUsersInfoList = usersInfoList
+//				.stream()
+//				.map(c -> {
+//					System.out.println(c + " " + c.startsWith(user.getUsername()));
+//					return c;
+//				})
+//				.filter((c) -> !c.startsWith(user.getUsername()))
+//				.collect(Collectors.toList());
+//			userInfoMap.replace(user.getUsername(), user);
+//			System.out.println("Updated userinfo for "+ user.getUsername());
+//			Files.write(file, newUsersInfoList, ENCODING, StandardOpenOption.TRUNCATE_EXISTING);
+//		}
+//		else 
+//		{
+//			throw new IOException("Unable to logout");
+//		}
+		
 	}
 
 }

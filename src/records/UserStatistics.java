@@ -29,6 +29,11 @@ public class UserStatistics implements Comparable<UserStatistics>, Serializable 
 	public void setTotalTimePlayed(float totalTimePlayed) {
 		this.totalTimePlayed = totalTimePlayed;
 	}
+	public void updateTotalTimePlayed(float additionalTime) {
+		this.totalTimePlayed += additionalTime;
+	}
+	
+	
 	public int getNumberOfWins() {
 		return numberOfWins;
 	}
@@ -67,7 +72,8 @@ public class UserStatistics implements Comparable<UserStatistics>, Serializable 
 		return (int) (this.avgTime - compareQuantity);
 	}
 	
-	public static Comparator<UserStatistics> AvgTimeComparator    = new Comparator<>() {
+	public static Comparator<UserStatistics> AvgTimeComparator    = new Comparator<UserStatistics>() {
+		@Override
 		public int compare(UserStatistics userOne, UserStatistics userTwo) {
 		return userOne.compareTo(userTwo);
 		}

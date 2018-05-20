@@ -119,6 +119,7 @@ public class ClientLogin implements Runnable{
 					            JOptionPane.ERROR_MESSAGE);
 					}
 				} catch (Exception e) {
+					e.printStackTrace();
 				    JOptionPane.showMessageDialog(new JFrame(), e.getMessage(), "Dialog",
 				            JOptionPane.ERROR_MESSAGE);
 				}

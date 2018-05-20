@@ -11,8 +11,9 @@ import server.RMIServerInterface;
 import javax.swing.JPanel;
 import javax.swing.BoxLayout;
 import javax.swing.SwingConstants;
+import javax.swing.border.EmptyBorder;
 
-public class UserInfoPage extends JPanel implements Runnable{
+public class UserInfoPage extends  SubPanel{
 
 	/**
 	 * 
@@ -27,21 +28,22 @@ public class UserInfoPage extends JPanel implements Runnable{
 		this.serverObj = serverObj;
 		this.currentUser = currentUser;
 		this.frame = frame;
+		userStats = this.currentUser.getUserStats();		
 	}
 
-	/**
-	 * @wbp.parser.entryPoint
-	 */
+
+	@Override
+	public void refreshInfo() {
+		// TODO Auto-generated method stub
+		
+	}
+
 	@Override
 	public void run() {
-		this.createInfoPanel();
-	}
-	
-	void createInfoPanel() {
-		userStats = this.currentUser.getUserStats();
-		
+		// TODO Auto-generated method stub
+		setBorder(new EmptyBorder(10, 10, 10, 10));
 		frame.getContentPane().add(this);
-		setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
+		setLayout(new GridLayout(3, 1, 0, 0));
 		
 		JLabel userNameText = new JLabel(currentUser.getUsername());
 		userNameText.setAlignmentX(Component.RIGHT_ALIGNMENT);

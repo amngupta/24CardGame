@@ -9,7 +9,7 @@ import javax.swing.JTable;
 
 import records.UserStatistics;
 
-public class LeaderBoard extends JPanel implements Runnable{
+public class LeaderBoard extends  SubPanel{
 	/**
 	 * 
 	 */
@@ -30,5 +30,12 @@ public class LeaderBoard extends JPanel implements Runnable{
 		frame.add(this);
 		model = new LeaderboardModel(userStats);
 		add(new JScrollPane(new JTable(model)));		
+	}
+
+
+	@Override
+	public void refreshInfo() {
+		// TODO Auto-generated method stub
+		
 	}
 }

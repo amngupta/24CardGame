@@ -1,3 +1,2 @@
-aman abc
-amn ace
-n n
+aman aman
+amn amn

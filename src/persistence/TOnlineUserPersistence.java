@@ -77,4 +77,13 @@ public class TOnlineUserPersistence implements OnlineUserPersistence{
 		}
 		return false;
 	}
+
+
+	@Override
+	public boolean isLoggedIn(UserInfo user) {
+		return onlineUserMap.containsKey(user.getUsername());
+	}
+	
+	
+	
 }

@@ -24,26 +24,25 @@ import server.JMSHelper.JMSDestinationType;
 
 @SuppressWarnings("unchecked")
 public class GameSession{
-
 	private Map<String, UserInfo> sessionUsers;
 	private Game game;
 	private OffsetDateTime startTime;
 	private Persistence persistence;
-	private JMSHelper jmsInstance;
-	private Thread gameThread;
+	private GameCommunicator gameComm;
+	private Thread gameWaitingThread;
+	
 	public boolean gameInSession;
-	private boolean correctAnswer;
+	private int id;
 	private static final int TIME_WINDOW  = 10000;
 	
-
-	public GameSession(Persistence p, JMSHelper jmsInstance, Game game){
+	public GameSession(int id, Persistence p, GameCommunicator gameCommunicator, Game game){
+		this.id = id;
 		this.persistence = p;
-		this.jmsInstance = jmsInstance;
+		this.gameComm = gameCommunicator;
 		sessionUsers = new ConcurrentHashMap<>();
 		this.game = game;
 		gameInSession = false;
 	}
-	
 	
 	public void addUserToSession(UserInfo user){
 		if (persistence.getOnlineUserPersistence().isLoggedIn(user))
@@ -64,8 +63,7 @@ public class GameSession{
 			System.out.println("Correct Answer");
 			Messages<String> win = new Messages<String>(MessageType.ANSWER, answer.getAnswer());
 			win.setUsername(user.getUsername());
-			this.informClients(win);
-			correctAnswer = true;
+			gameComm.informClients(win);
 			sessionUsers.forEach((key, value)-> {
 				float additionalTime = Duration.between(this.startTime, answer.getAnswerTime()).toMillis();
 				value.getUserStats().incrementGames();
@@ -94,18 +92,8 @@ public class GameSession{
 	public void readyToStart() {
 		game.prepareGameInstance();
 		GameLobbyThread gi = new GameLobbyThread();
-		gameThread = new Thread(gi);
-		gameThread.start();
-	}
-
-	protected <T> void informClients(Messages<T> m)
-	{
-		try {
-			jmsInstance.sendMessage(m, JMSDestinationType.TOPIC);
-		} catch (JMSException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+		gameWaitingThread = new Thread(gi);
+		gameWaitingThread.start();
 	}
 	
 	private class GameLobbyThread implements Runnable {
@@ -146,19 +134,20 @@ public class GameSession{
 	public void cancelGame(String reason) {
 		sessionUsers.clear();
 		Messages<String> notification = new Messages<>(MessageType.NOTIFICATION,  reason);
-		informClients(notification);
+		gameComm.informClients(notification);
 		System.out.println("Game Cancelled");
 		gameInSession = false;
+		this.endGame();
 	}
 
 	public void startGame() {
 		startTime = OffsetDateTime.now();
 		try {
 			Messages<Map<String, UserInfo>> users = new Messages<>(MessageType.GAME_PLAYERS, sessionUsers);
-			informClients(users);
+			gameComm.informClients(users);
 //			TODO	Fix the getSelectedCards stuff
 			Messages<List<Cards>> cards = new Messages<>(MessageType.START_GAME,  ((CardGame) game).getSelectedCards());
-			informClients(cards);
+			gameComm.informClients(cards);
 			System.out.println("Game Problem Sent");
 			gameInSession = true;
 		} catch (Exception e) {
@@ -168,9 +157,6 @@ public class GameSession{
 	}
 
 	public void endGame() {
-		// TODO Auto-generated method stub
-//		if (correctAnswer)
-//			cancelGame("Correct Answer");
-		
+		gameComm.gameEnded(id);
 	}
 }

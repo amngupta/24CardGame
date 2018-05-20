@@ -27,7 +27,7 @@ public class TOnlineUserPersistence implements OnlineUserPersistence{
 		fileName = filename;
 		file = Paths.get(fileName);
 		onlineUserMap = new HashMap<>();
-		System.out.println("OP Ini"  + file.toAbsolutePath().toString());
+//		System.out.println("OP Ini"  + file.toAbsolutePath().toString());
 	}
 
 

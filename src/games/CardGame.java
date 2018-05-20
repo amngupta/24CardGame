@@ -24,7 +24,6 @@ public class CardGame implements Game{
 		this.cardsList = Cards.generateCardsList();
 	}
 
-	
 	public List<Cards> getSelectedCards()
 	{
 		return selectedCards;
@@ -64,14 +63,6 @@ public class CardGame implements Game{
 		selectedCards.add(getCard(2));		
 	}
 
-
-	@Override
-	public void sendGameInfo(UserInfo user) {
-		// TODO Auto-generated method stub
-		
-	}
-
-
 	@Override
 	public String getProblem() {
 		// TODO Auto-generated method stub
@@ -81,7 +72,6 @@ public class CardGame implements Game{
 			cardsFileNames += ((Cards) c).getFileName() + ",";
 		}
 		return cardsFileNames;
-		
 	}
 	
 }

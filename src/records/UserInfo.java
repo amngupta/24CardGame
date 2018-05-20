@@ -13,11 +13,16 @@ public class UserInfo implements Serializable{
 	private String password;
 	private UserStatistics userStats; 
 	
-	public UserInfo(String username, String password) {
-		// TODO Auto-generated constructor stub
+	public UserInfo(String username, String password)
+	{
 		this.username = username;
 		this.password = password; 
-		userStats = new UserStatistics(username);
+	}
+	
+	
+	public UserInfo(String username, String password, UserStatistics us) {
+		this(username, password);
+		this.userStats = us;
 	}
 	
 	public String getUsername() {

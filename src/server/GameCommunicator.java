@@ -1,5 +1,8 @@
 package server;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import javax.jms.JMSException;
 import javax.jms.Message;
 import javax.jms.MessageListener;
@@ -13,7 +16,7 @@ import server.JMSHelper.JMSDestinationType;
 
 public class GameCommunicator implements MessageListener{
 	
-	private GameSession gameSession;
+	private Map<Integer, GameSession> gameSessionsMap;
 	private Persistence persistence;
 	private Game game;
 	private JMSHelper jmsHelper;
@@ -30,6 +33,7 @@ public class GameCommunicator implements MessageListener{
 			e.printStackTrace();
 		}
 		this.newGame = true;
+		gameSessionsMap = new HashMap<>();
 	}
 	
 	@SuppressWarnings("unchecked")
@@ -46,13 +50,12 @@ public class GameCommunicator implements MessageListener{
 					this.prepareGame();
 					newGame = false;
 				}
-				this.gameSession.addUserToSession(user);
+				this.gameSessionsMap.get(1).addUserToSession(user);
 	        }	
-			if (m.getMessageType() == MessageType.ANSWER && gameSession.gameInSession)
+			if (m.getMessageType() == MessageType.ANSWER)
 			{
 				Answer ans = new Answer(m.getMessage());
-				gameSession.reviewSubmittedAnswer(user, ans);
-				gameSession.endGame();
+				gameSessionsMap.get(1).reviewSubmittedAnswer(user, ans);
 			}
 			if (m.getMessageType() == MessageType.NOTIFICATION)
 			{
@@ -67,11 +70,23 @@ public class GameCommunicator implements MessageListener{
 
 	public void prepareGame() {
 		// TODO Auto-generated method stub
-		this.gameSession = new GameSession(persistence, jmsHelper, game);
-		this.gameSession.readyToStart();
+		GameSession gm = new GameSession(1, persistence, this, game);
+		gm.readyToStart();
+		this.gameSessionsMap.put(1, gm);
 	}
 	
-	
-	
+	public <T> void informClients(Messages<T> m)
+	{
+		try {
+			jmsHelper.sendMessage(m, JMSDestinationType.TOPIC);
+		} catch (JMSException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
 
+	public void gameEnded(int id) {
+		this.newGame = true;
+		this.gameSessionsMap.remove(id);
+	}
 }

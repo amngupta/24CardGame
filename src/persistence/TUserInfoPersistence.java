@@ -36,7 +36,7 @@ public class TUserInfoPersistence implements UserInfoPersistence {
 				String[] info = user.split(" +");
 				if (info.length == 2)
 				{
-					UserInfo userObj = new UserInfo(info[0], info[1]);
+					UserInfo userObj = new UserInfo(info[0], info[1], null);
 					userInfoMap.putIfAbsent(info[0], userObj);
 				}
 			});

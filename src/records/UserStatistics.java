@@ -15,12 +15,12 @@ public class UserStatistics implements Comparable<UserStatistics>, Serializable 
 	private String username;
 	private int rank;
 	private float avgTime;
-	public UserStatistics(String user)
+	public UserStatistics(String user, int totalGames, int gamesWon, int totalTimePlayed)
 	{
-		username = user;
-		numberOfGames = (int) (100*Math.random());
-		numberOfWins = (int) Math.abs(numberOfGames - (100*Math.random()));
-		totalTimePlayed = (float) (1000*Math.random());
+		this.username = user;
+		this.numberOfGames = totalGames;
+		this.numberOfWins = gamesWon;
+		this.totalTimePlayed = totalTimePlayed;
 	}
 	
 	public float getTotalTimePlayed() {

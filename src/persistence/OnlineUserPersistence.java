@@ -9,5 +9,5 @@ public interface OnlineUserPersistence {
 	public void logoutUser(UserInfo user) throws IOException;
 	public boolean isLoggedIn(UserInfo user);
 	
-	public void clearFile() throws IOException;
+	public void clearServerCache() throws IOException;
 }

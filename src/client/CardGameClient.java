@@ -1,38 +1,30 @@
 package client;
 
-import javax.swing.JPanel;
-import java.awt.GridBagLayout;
+import java.awt.Button;
+import java.awt.Container;
 import java.awt.FlowLayout;
-import java.awt.BorderLayout;
-
-import javax.jms.MessageListener;
-import javax.swing.BoxLayout;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.net.URL;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.atomic.AtomicInteger;
 
-import javax.swing.JLabel;
-import javax.swing.JOptionPane;
 import javax.swing.ImageIcon;
 import javax.swing.JFrame;
+import javax.swing.JLabel;
+import javax.swing.JOptionPane;
+import javax.swing.JPanel;
+import javax.swing.JTextField;
 import javax.swing.SwingConstants;
+import javax.swing.border.EmptyBorder;
 
 import games.Cards;
 import games.PostFix;
 import records.UserInfo;
-
-import javax.swing.JTextField;
-import java.awt.Button;
-import java.awt.Container;
-
-import javax.swing.border.EmptyBorder;
 
 public class CardGameClient extends SubPanel {
 	/**
@@ -269,6 +261,23 @@ public class CardGameClient extends SubPanel {
 			i.setIcon(new ImageIcon(backCard));
 			i.setText("");
 		}); 
+	}
+	
+	@Override
+	public void showPanel() {	
+		super.showPanel();
+		frame.leaderButton.setEnabled(false);
+		frame.profileButton.setEnabled(false);
+		frame.playButton.setEnabled(false);
+	}
+	
+	
+	@Override
+	public void hidePanel() {
+		super.hidePanel();
+		frame.leaderButton.setEnabled(true);
+		frame.profileButton.setEnabled(true);
+		frame.playButton.setEnabled(true);
 	}
 	
 	// TODO ensure only one of each?

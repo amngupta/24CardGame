@@ -53,14 +53,14 @@ public class CardGame implements Game{
 	public void prepareGameInstance()
 	{
 		selectedCards = new ArrayList<Cards>();
-//		for (int i = 0; i < 4; i++)
-//		{
-//			selectedCards.add(getCard(generator.nextInt(52)));
-//		}
-		selectedCards.add(getCard(4));
-		selectedCards.add(getCard(11));
-		selectedCards.add(getCard(1));
-		selectedCards.add(getCard(2));		
+		for (int i = 0; i < 4; i++)
+		{
+			selectedCards.add(getCard(generator.nextInt(52)));
+		}
+//		selectedCards.add(getCard(4));
+//		selectedCards.add(getCard(11));
+//		selectedCards.add(getCard(1));
+//		selectedCards.add(getCard(2));		
 	}
 
 	@Override

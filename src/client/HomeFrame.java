@@ -19,6 +19,10 @@ public class HomeFrame extends JFrame implements Runnable {
 	private RMIServerInterface serverObj;
 	private GameClientStub gameClientStub;
 	private Map<String, SubPanel> panelsMap;
+	public  JButton logoutButton;
+	public JButton leaderButton;
+	public JButton playButton;
+	public JButton profileButton;
 	
 	public HomeFrame(RMIServerInterface serverObj, UserInfo currentUser) {
 		// TODO Auto-generated constructor stub
@@ -39,16 +43,16 @@ public class HomeFrame extends JFrame implements Runnable {
 		menuPanel = new JPanel();
 		menuPanel.setLayout(new BoxLayout(menuPanel, BoxLayout.X_AXIS));		
 		
-		JButton profileButton = new JButton("User Profile");
+		profileButton = new JButton("User Profile");
 		menuPanel.add(profileButton);
 		
-		JButton playButton = new JButton("Play Game");
+		playButton = new JButton("Play Game");
 		menuPanel.add(playButton);
 		
-		JButton leaderButton = new JButton("Leader Board");
+		leaderButton = new JButton("Leader Board");
 		menuPanel.add(leaderButton);
 		
-		JButton logoutButton = new JButton("Logout");
+		logoutButton = new JButton("Logout");
 		menuPanel.add(logoutButton);
 		//		infoPanel.setVisible(true);
 		

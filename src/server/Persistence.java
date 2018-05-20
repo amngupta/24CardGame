@@ -7,8 +7,6 @@ import java.sql.SQLException;
 import persistence.OnlineUserPersistence;
 import persistence.SQLOnlineUserPersistence;
 import persistence.SQLUserInfoPersistence;
-import persistence.TOnlineUserPersistence;
-import persistence.TUserInfoPersistence;
 import persistence.UserInfoPersistence;
 
 public class Persistence {
@@ -30,7 +28,8 @@ public class Persistence {
 				"&password="+DB_PASS);
 		System.out.println("Database connection successful.");
 		userInfoPersistence = new SQLUserInfoPersistence(conn);
-		onlineUserPersistence = new TOnlineUserPersistence("OnlineUser.txt");
+		onlineUserPersistence = new SQLOnlineUserPersistence(conn);
+//		onlineUserPersistence = new TOnlineUserPersistence("OnlineUser.txt");
 	}
 	
 	UserInfoPersistence getUserInfoPersistence() {

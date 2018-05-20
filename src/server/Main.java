@@ -17,6 +17,8 @@ public class Main {
 
 			CardGame cg = new CardGame();
 			GameCommunicator gv = new GameCommunicator(persist, jms, cg);
+			app.setGameCommunicator(gv);
+			
 			System.setSecurityManager(new SecurityManager());
 			Naming.rebind("24Cards", app);
 			System.out.println("RMI Service registered");

@@ -13,13 +13,11 @@ import javax.jms.MessageProducer;
 import javax.jms.ObjectMessage;
 import javax.jms.Queue;
 import javax.jms.Session;
-import javax.jms.TextMessage;
 import javax.jms.Topic;
 import javax.naming.InitialContext;
 import javax.naming.NamingException;
 
 import records.Messages;
-import server.JMSHelper.JMSDestinationType;
 
 public class JMSHelper {
 	private static final String DEFAULT_HOST = "localhost";

@@ -58,7 +58,7 @@ public class TOnlineUserPersistence implements OnlineUserPersistence{
 
 
 	@Override
-	public void clearFile() throws IOException {
+	public void clearServerCache() throws IOException {
 		// TODO Auto-generated method stub
 		Files.deleteIfExists(file);
 		Files.createFile(file);

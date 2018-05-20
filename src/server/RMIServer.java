@@ -15,6 +15,7 @@ public class RMIServer extends UnicastRemoteObject implements RMIServerInterface
 	 */
 	private static final long serialVersionUID = 1L;
 	private Persistence persistence;
+	private GameCommunicator gameCommuniator;
 	
 	protected RMIServer() throws RemoteException {
 		super();
@@ -25,12 +26,18 @@ public class RMIServer extends UnicastRemoteObject implements RMIServerInterface
 		this.persistence = persistence;
 		persistence.getUserInfoPersistence().generateUserList();
 		try {
-			persistence.getOnlineUserPersistence().clearFile();
+			persistence.getOnlineUserPersistence().clearServerCache();
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
 	}
 
+	public void setGameCommunicator(GameCommunicator gc)
+	{
+		gameCommuniator = gc;
+	}
+	
+	
 	@Override
 	public void createUser(UserInfo user) throws RemoteException {
 		// TODO Auto-generated method stub
@@ -66,6 +73,7 @@ public class RMIServer extends UnicastRemoteObject implements RMIServerInterface
 
 	@Override
 	public void logoutUser(UserInfo user) throws RemoteException, IOException {
+		gameCommuniator.userStatusChange(user);
 		persistence.getOnlineUserPersistence().logoutUser(user);
 	}
 

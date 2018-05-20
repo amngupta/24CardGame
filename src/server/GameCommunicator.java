@@ -92,4 +92,12 @@ public class GameCommunicator implements MessageListener{
 		this.gameInProgress = false;
 		this.gameSessionsMap.remove(id);
 	}
+
+	public void userStatusChange(UserInfo user) {
+		if (gameInProgress)
+		{
+			this.gameSessionsMap.get(1).getSessionUsers().containsValue(user);
+			this.gameSessionsMap.get(1).cancelGame("Session Ended: An opponent has logged out");
+		}
+	}
 }

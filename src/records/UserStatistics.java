@@ -64,7 +64,7 @@ public class UserStatistics implements Comparable<UserStatistics>, Serializable 
 	}
 	
 	public void computeAvgTime(){
-		this.avgTime = this.totalTimePlayed / this.numberOfWins;
+		this.avgTime = this.totalTimePlayed / (this.numberOfWins * 1000);
 	}
 	
 	public int compareTo(UserStatistics compareStats) {
@@ -83,5 +83,4 @@ public class UserStatistics implements Comparable<UserStatistics>, Serializable 
 	public String toString() {
 		return username + "  " + rank + "  " + avgTime;
 	}
-	
 }

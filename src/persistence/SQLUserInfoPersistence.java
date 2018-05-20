@@ -40,11 +40,12 @@ public class SQLUserInfoPersistence implements UserInfoPersistence {
 
 	@Override
 	public UserInfo searchUser(String user) {
-		System.out.println("searching user " + user);
+		System.out.println("searching for user " + user);
 		if (userInfoMap.containsKey(user))
 		{
 			return userInfoMap.get(user);
 		}
+		System.out.println("User not found: " + user);
 		return null;
 	}
 
@@ -52,20 +53,23 @@ public class SQLUserInfoPersistence implements UserInfoPersistence {
 	public void generateUserList() {
 		try {
 			Statement stmt = conn.createStatement();
-			ResultSet rs = stmt.executeQuery("SELECT username, password, totalGames, totalWins, timePlayed FROM UserInfo");
+			ResultSet rs = stmt.executeQuery("SELECT username, password, totalGames, totalWins, timePlayed, `rank` FROM UserInfo");
 			while(rs.next()) {
 				String username = rs.getString(1);
 				String password = rs.getString(2);
 				Integer totalGames = rs.getInt(3);
 				Integer totalWins = rs.getInt(4);
 				Integer timePlayed = rs.getInt(5);
+				Integer rank = rs.getInt(6);
+//				System.out.println("Birthday of "+rs.getString(1)+" is on "+rs.getString(2));
 				UserStatistics us = new UserStatistics(username, totalGames, totalWins, timePlayed);
+				us.setRank(rank);
 				UserInfo user = new UserInfo(username, password, us);
 				userInfoMap.put(username, user);
-				System.out.println("Birthday of "+rs.getString(1)+" is on "+rs.getDate(2).toString());
 			}
 		} catch (SQLException e) {
 			System.err.println("Error listing records: "+e);
+			e.printStackTrace();
 		}
 	}
 
@@ -74,11 +78,20 @@ public class SQLUserInfoPersistence implements UserInfoPersistence {
 		// TODO Auto-generated method stub
 		List<UserStatistics> statsList = new ArrayList<>();
 		this.userInfoMap.forEach((string, userObj)->{
-			userObj.getUserStats().computeAvgTime();
-			statsList.add(userObj.getUserStats());
+			if (userObj.getUserStats() != null)
+			{
+				userObj.getUserStats().computeAvgTime();
+				statsList.add(userObj.getUserStats());
+			}
 		});
-		 statsList.sort(UserStatistics.AvgTimeComparator);
-		 return statsList;
+		statsList.sort(UserStatistics.AvgTimeComparator);
+		int r = 1;
+		for (UserStatistics us : statsList)
+		{
+			us.setRank(r);
+			r++;
+		}
+		return statsList;
 	}
 
 	@Override
@@ -89,7 +102,6 @@ public class SQLUserInfoPersistence implements UserInfoPersistence {
 			stmt.setInt(2, user.getUserStats().getNumberOfWins());
 			stmt.setFloat(3, user.getUserStats().getTotalTimePlayed());
 			stmt.setString(4, user.getUsername());
-					
 			int rows = stmt.executeUpdate();
 			if(rows > 0) {
 				System.out.println("Information of "+user.getUsername()+" updated");
@@ -98,6 +110,35 @@ public class SQLUserInfoPersistence implements UserInfoPersistence {
 			}
 		} catch (SQLException e) {
 			System.err.println("Error reading record: "+e);
+		}
+	}
+
+	@Override
+	public void recomputeRankings() {
+		List<UserStatistics> stats = this.getUserStatsList();
+		try {
+			PreparedStatement stmt = conn.prepareStatement("UPDATE UserInfo SET `rank` = ? WHERE username = ?");
+			stats.forEach(i-> {
+				try {
+					stmt.setInt(1, i.getRank());
+					stmt.setString(2, i.getUsername());
+					int rows = stmt.executeUpdate();
+					if(rows > 0) {
+						System.out.println("Information of "+i.getUsername()+" updated");
+					} else {
+						System.out.println(i.getUsername()+" not found!");
+					}
+				} catch (SQLException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+			});
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		finally {
+			this.generateUserList();
 		}
 	}
 

@@ -14,8 +14,8 @@ import persistence.UserInfoPersistence;
 public class Persistence {
 	private UserInfoPersistence userInfoPersistence;
 	private OnlineUserPersistence onlineUserPersistence;
-	private static final String DB_HOST = "sophia";
-	private static final String DB_USER = "agupta2";
+	private static final String DB_HOST = "localhost";
+	private static final String DB_USER = "root";
 	private static final String DB_PASS = "rootroot";
 	private static final String DB_NAME = "agupta2";
 	

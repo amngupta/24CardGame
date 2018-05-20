@@ -13,15 +13,18 @@ public class UserInfo implements Serializable{
 	private String password;
 	private UserStatistics userStats; 
 	
+	
 	public UserInfo(String username, String password)
 	{
 		this.username = username;
 		this.password = password; 
+		this.userStats = new UserStatistics(username, 0, 0, 0);
 	}
 	
 	
 	public UserInfo(String username, String password, UserStatistics us) {
-		this(username, password);
+		this.username = username;
+		this.password = password; 
 		this.userStats = us;
 	}
 	

@@ -19,5 +19,7 @@ public interface RMIServerInterface  extends Remote
 	public List<UserStatistics> getUserStats() throws RemoteException;
 
 	public void logoutUser(UserInfo currentUser) throws RemoteException, IOException;
+
+	public UserInfo getUserInfo(String username) throws RemoteException, IOException;
 	
 }

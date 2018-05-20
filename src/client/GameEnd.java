@@ -69,7 +69,8 @@ public class GameEnd extends SubPanel{
 	@Override
 	public void refreshInfo() {
 		// TODO Auto-generated method stub
-		
+		this.answerLabel.setText("");
+		this.winnerInfoLabel.setText("");
 	}
 	
 	public void setEndInfo(String username, String answer)

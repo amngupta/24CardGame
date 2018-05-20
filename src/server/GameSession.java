@@ -59,6 +59,8 @@ public class GameSession{
 	public void reviewSubmittedAnswer(UserInfo user, Answer answer) {
 		if (game.checkAnswer(answer)) {
 			// Inform Clients
+			System.out.println(user.getUsername());
+			System.out.println(user.getUserStats().toString());
 			user.getUserStats().incrementWins();
 			System.out.println("Correct Answer");
 			Messages<String> win = new Messages<String>(MessageType.ANSWER, answer.getAnswer());
@@ -77,11 +79,11 @@ public class GameSession{
 					e.printStackTrace();
 				}
 			});
+			persistence.getUserInfoPersistence().recomputeRankings();
 			this.endGame();
 		}
 		else 
 		{
-			// Inform user wrong answer
 			System.out.println("Incorrect Answer");
 		}
 		
@@ -104,16 +106,18 @@ public class GameSession{
 			System.out.println("Thread running...");
 			while (true)
 			{
-				if (sessionUsers.size() == 1)
+				if (sessionUsers.size() > 0)
 				{
-					firstJoinTime = OffsetDateTime.now();
-					setFirstJoin = true;
-					System.out.println("Added first user");
-				}
-				if (setFirstJoin)
-				{	
-					if (Duration.between(firstJoinTime, OffsetDateTime.now()).toMillis() >= TIME_WINDOW)
-						break;
+					if (setFirstJoin)
+					{	
+						if (Duration.between(firstJoinTime, OffsetDateTime.now()).toMillis() >= TIME_WINDOW)
+							break;
+					}
+					else {
+						firstJoinTime = OffsetDateTime.now();
+						setFirstJoin = true;
+						System.out.println("Added first user");						
+					}
 				}
 				if (sessionUsers.size() == 4) {
 					break;
@@ -132,7 +136,6 @@ public class GameSession{
 	}
 
 	public void cancelGame(String reason) {
-		sessionUsers.clear();
 		Messages<String> notification = new Messages<>(MessageType.NOTIFICATION,  reason);
 		gameComm.informClients(notification);
 		System.out.println("Game Cancelled");
@@ -157,6 +160,7 @@ public class GameSession{
 	}
 
 	public void endGame() {
+		sessionUsers.clear();
 		gameComm.gameEnded(id);
 	}
 }

@@ -20,7 +20,7 @@ public class GameCommunicator implements MessageListener{
 	private Persistence persistence;
 	private Game game;
 	private JMSHelper jmsHelper;
-	private boolean newGame;
+	private boolean gameInProgress;
 	GameCommunicator(Persistence persistence, JMSHelper jmsHelper, Game game)
 	{
 		this.persistence = persistence;
@@ -32,7 +32,7 @@ public class GameCommunicator implements MessageListener{
 		} catch (JMSException e) {
 			e.printStackTrace();
 		}
-		this.newGame = true;
+		this.gameInProgress = false;
 		gameSessionsMap = new HashMap<>();
 	}
 	
@@ -45,17 +45,20 @@ public class GameCommunicator implements MessageListener{
         	UserInfo user = persistence.getUserInfoPersistence().searchUser(m.getUsername());
 			if (m.getMessageType() == MessageType.START_GAME)
 	        {
-				if (newGame)
+				if (!gameInProgress)
 				{
 					this.prepareGame();
-					newGame = false;
+					gameInProgress = true;
 				}
 				this.gameSessionsMap.get(1).addUserToSession(user);
 	        }	
 			if (m.getMessageType() == MessageType.ANSWER)
 			{
-				Answer ans = new Answer(m.getMessage());
-				gameSessionsMap.get(1).reviewSubmittedAnswer(user, ans);
+				if (gameInProgress)
+				{
+					Answer ans = new Answer(m.getMessage());
+					gameSessionsMap.get(1).reviewSubmittedAnswer(user, ans);
+				}
 			}
 			if (m.getMessageType() == MessageType.NOTIFICATION)
 			{
@@ -86,7 +89,7 @@ public class GameCommunicator implements MessageListener{
 	}
 
 	public void gameEnded(int id) {
-		this.newGame = true;
+		this.gameInProgress = false;
 		this.gameSessionsMap.remove(id);
 	}
 }

@@ -23,6 +23,10 @@ public class UserInfoPage extends  SubPanel{
 	private UserInfo currentUser;
 	private RMIServerInterface serverObj;
 	private UserStatistics userStats;
+	private JLabel rankLabel;
+	private JLabel totalGamesText;
+	private JLabel averageTimeText;
+	private JLabel winsText;
 	
 	public UserInfoPage(RMIServerInterface serverObj, UserInfo currentUser, JFrame frame) {
 		this.serverObj = serverObj;
@@ -34,8 +38,17 @@ public class UserInfoPage extends  SubPanel{
 
 	@Override
 	public void refreshInfo() {
-		// TODO Auto-generated method stub
-		
+		try {
+			currentUser = serverObj.getUserInfo(currentUser.getUsername());
+			userStats = currentUser.getUserStats();
+			userStats.computeAvgTime();
+			rankLabel.setText("You are currently Rank " + userStats.getRank());
+			averageTimeText.setText(Float.toString(userStats.getAvgTime()));
+			winsText.setText(Integer.toString(userStats.getNumberOfWins()));
+			totalGamesText.setText(Integer.toString(userStats.getNumberOfGames()));
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 	}
 
 	@Override
@@ -58,24 +71,21 @@ public class UserInfoPage extends  SubPanel{
 		
 		JLabel winsLabel = new JLabel("Wins: ");
 		listPanel.add(winsLabel);
-		
-		JLabel winsText = new JLabel(Integer.toString(userStats.getNumberOfWins()));
+		winsText = new JLabel(Integer.toString(userStats.getNumberOfWins()));
 		listPanel.add(winsText);
 		
 		JLabel lblTotalGames = new JLabel("Total Games: ");
 		listPanel.add(lblTotalGames);
-		
-		JLabel totalGamesText = new JLabel(Integer.toString(userStats.getNumberOfGames()));
+		totalGamesText = new JLabel(Integer.toString(userStats.getNumberOfGames()));
 		listPanel.add(totalGamesText);
-		
-		JLabel lblAverageTime = new JLabel("Average Time: ");
+		userStats.computeAvgTime();
+
+		JLabel lblAverageTime = new JLabel("Average Time (seconds): ");
 		listPanel.add(lblAverageTime);
-		JLabel averageTimeText = new JLabel(Float.toString(userStats.getAvgTime()));
+		averageTimeText = new JLabel(Float.toString(userStats.getAvgTime()));
 		listPanel.add(averageTimeText);
 		
-		userStats.computeAvgTime();
-		
-		JLabel rankLabel = new JLabel("You are currently Rank " + userStats.getRank());
+		rankLabel = new JLabel("You are currently Rank " + userStats.getRank());
 		add(rankLabel);
 		rankLabel.setFont(new Font("Tahoma", Font.BOLD, 24));
 	}

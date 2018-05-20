@@ -13,4 +13,5 @@ public interface UserInfoPersistence {
 	public void generateUserList();
 	public List<UserStatistics> getUserStatsList();
 	public void updateUser(UserInfo user) throws IOException;
+	public void recomputeRankings();
 }

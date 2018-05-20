@@ -1,6 +1,5 @@
 package client;
 
-import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 
@@ -9,12 +8,13 @@ import javax.jms.Message;
 import javax.jms.MessageListener;
 import javax.jms.ObjectMessage;
 import javax.naming.NamingException;
+import javax.swing.JFrame;
+import javax.swing.JOptionPane;
 
 import games.Cards;
 import records.Messages;
 import records.Messages.MessageType;
 import records.UserInfo;
-import server.Answer;
 import server.JMSHelper;
 import server.JMSHelper.JMSDestinationType;
 
@@ -90,14 +90,16 @@ public class GameClientStub implements MessageListener{
 //	        	Messages<List<Cards>> cards = (Messages<List<Cards>>) ((ObjectMessage)message).getObject();
 //	        	send to game client
 				Messages<Map<String, UserInfo>> usersMessage = (Messages<Map<String, UserInfo>>) ((ObjectMessage)message).getObject();
-				usersMessage.getMessage().forEach((name, info)->cardGameClient.loadOpponentInfo(name, info));
+				cardGameClient.addOpponentInfo(usersMessage.getMessage());
 				System.out.println("Got game opponnets...");
 	        }
 			if (m.getMessageType() == MessageType.NOTIFICATION)
 			{
 	        	Messages<String> notification = (Messages<String>) ((ObjectMessage)message).getObject();
-
 	        	System.out.println("Recevied notification..." + notification.getMessage());
+	        	JOptionPane.showMessageDialog(new JFrame(), notification.getMessage(), "Dialog",
+			            JOptionPane.ERROR_MESSAGE);
+	        	cardGameClient.activateGameEnd("", "");
 			}
 			if (m.getMessageType() == MessageType.ANSWER)
 			{

@@ -69,4 +69,9 @@ public class RMIServer extends UnicastRemoteObject implements RMIServerInterface
 		persistence.getOnlineUserPersistence().logoutUser(user);
 	}
 
+	@Override
+	public UserInfo getUserInfo(String username) throws RemoteException, IOException{
+		return persistence.getUserInfoPersistence().searchUser(username);
+	}
+
 }

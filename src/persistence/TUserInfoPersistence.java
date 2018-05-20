@@ -124,4 +124,10 @@ public class TUserInfoPersistence implements UserInfoPersistence {
 		
 	}
 
+	@Override
+	public void recomputeRankings() {
+		// TODO Auto-generated method stub
+		
+	}
+
 }

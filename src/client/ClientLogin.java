@@ -114,7 +114,7 @@ public class ClientLogin implements Runnable{
 					}
 					else
 					{
-						String message = "Enter valid username";
+						String message = "Invalid valid username/password";
 					    JOptionPane.showMessageDialog(new JFrame(), message, "Dialog",
 					            JOptionPane.ERROR_MESSAGE);
 					}

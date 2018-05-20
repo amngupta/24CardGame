@@ -57,9 +57,9 @@ public class CardGame implements Game{
 //		{
 //			selectedCards.add(getCard(generator.nextInt(52)));
 //		}
-		selectedCards.add(getCard(5));
-		selectedCards.add(getCard(3));
-		selectedCards.add(getCard(0));
+		selectedCards.add(getCard(4));
+		selectedCards.add(getCard(11));
+		selectedCards.add(getCard(1));
 		selectedCards.add(getCard(2));		
 	}
 

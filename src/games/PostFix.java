@@ -68,7 +68,7 @@ public class PostFix {
                 }
                  
                 if (!stack.isEmpty() && stack.peek() != '(')
-                    throw new Exception(); // invalid expression                
+                    throw new Exception("WTF"); // invalid expression                
                 else
                     stack.pop();
             }

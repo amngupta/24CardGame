@@ -14,8 +14,8 @@ public class LeaderboardModel extends AbstractTableModel {
             "Name",
             "Games Won",
             "Games Played",
-            "Total Time Played",
-            "Average Time"};
+            "Total Time Played (s)",
+            "Average Time (s)"};
 
 	
     private final Class[] columnClass = new Class[] {
@@ -26,9 +26,6 @@ public class LeaderboardModel extends AbstractTableModel {
     LeaderboardModel(List<UserStatistics> stats)
     {
     	this.leaderboardList = stats;
-    	System.out.println(stats.size());
-    	UserStatistics stat = stats.get(0);
-    	System.out.println(stat.toString());
     }
     
 	@Override
@@ -44,7 +41,7 @@ public class LeaderboardModel extends AbstractTableModel {
         case 3:
         	return row.getNumberOfGames();
         case 4:
-        	return row.getTotalTimePlayed();
+        	return (row.getTotalTimePlayed()/1000);
         case 5:
         	return row.getAvgTime();
         }

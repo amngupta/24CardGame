@@ -97,15 +97,9 @@ public class HomeFrame extends JFrame implements Runnable {
 		this.panelsMap.put("userInfo", userInfoPage);
 		SwingUtilities.invokeLater(userInfoPage);
 		
-		try {
-			SubPanel leaderboardPage = new LeaderBoard(serverObj.getUserStats(), this);
-			this.panelsMap.put("leaderboard", leaderboardPage);
-			SwingUtilities.invokeLater(leaderboardPage);
-
-		} catch (RemoteException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+		SubPanel leaderboardPage = new LeaderBoard(serverObj, this);
+		this.panelsMap.put("leaderboard", leaderboardPage);
+		SwingUtilities.invokeLater(leaderboardPage);
 		
 		SubPanel gameWindow = new CardGameClient(currentUser, this.gameClientStub, this);
 		this.panelsMap.put("gameWindow", gameWindow);

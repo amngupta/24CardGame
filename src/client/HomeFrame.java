@@ -3,17 +3,21 @@ package client;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.IOException;
-import java.rmi.RemoteException;
 import java.util.HashMap;
 import java.util.Map;
 
-import javax.swing.*;
+import javax.swing.BoxLayout;
+import javax.swing.JButton;
+import javax.swing.JFrame;
+import javax.swing.JPanel;
+import javax.swing.SwingUtilities;
 
 import records.UserInfo;
 import server.RMIServerInterface;
 
 public class HomeFrame extends JFrame implements Runnable {
 
+	private static final long serialVersionUID = 1L;
 	private JPanel menuPanel;
 	private UserInfo currentUser;
 	private RMIServerInterface serverObj;

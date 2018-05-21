@@ -17,6 +17,7 @@ import records.Messages.MessageType;
 import records.UserInfo;
 import server.JMSHelper;
 import server.JMSHelper.JMSDestinationType;
+import server.PropertiesLoader;
 
 public class GameClientStub implements MessageListener{
 
@@ -24,9 +25,13 @@ public class GameClientStub implements MessageListener{
 	private JMSHelper jmsHelper;
 	private CardGameClient cardGameClient;
 	public GameClientStub(UserInfo currentUser) {
+		PropertiesLoader prop = new PropertiesLoader();
+		prop.loadProperties();
+		String host = prop.getProperty("JMS_HOST");
+		Integer port = Integer.parseInt(prop.getProperty("JMS_PORT"));
 		this.currentUser = currentUser;
 		try {
-			jmsHelper = new JMSHelper();
+			jmsHelper = new JMSHelper(host, port);
 			jmsHelper.setListener(JMSDestinationType.TOPIC, this, null);
 		} catch (JMSException | NamingException e) {
 			// TODO Auto-generated catch block
@@ -40,7 +45,6 @@ public class GameClientStub implements MessageListener{
 	}
 	
 	public void sendNewGameRequest() {
-		// TODO Auto-generated method stub
 		try {
 
 			Messages<String> req = new Messages<String>(MessageType.START_GAME, "");
@@ -56,7 +60,6 @@ public class GameClientStub implements MessageListener{
 	}
 
 	public void sendAnswer(String answer) {
-		// TODO Auto-generated method stub
 		try {
 
 			Messages<String> req = new Messages<>(MessageType.ANSWER, answer);
@@ -107,8 +110,6 @@ public class GameClientStub implements MessageListener{
 				String answer = win.getMessage();
 				String winningUser = win.getUsername();
 				cardGameClient.activateGameEnd(answer, winningUser);
-
-				
 //						new Messages<String>(MessageType.ANSWER, String.format("%s,%s", user.getUsername(), answer.getAnswer()));
 			}
 		} catch (JMSException e) {

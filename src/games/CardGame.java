@@ -3,10 +3,7 @@ package games;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
-import java.util.Stack;
-import java.util.stream.IntStream;
 
-import records.UserInfo;
 import server.Answer;
 
 public class CardGame implements Game{
@@ -16,10 +13,13 @@ public class CardGame implements Game{
 	List<Cards> cardsList;
 	Random generator;
 	private ArrayList<Cards> selectedCards;
+
+	private boolean DEBUG;
 	
 	
-	public CardGame()
+	public CardGame(boolean isDebug)
 	{
+		this.DEBUG = isDebug;
 		this.generator = new Random();
 		this.cardsList = Cards.generateCardsList();
 	}
@@ -53,14 +53,18 @@ public class CardGame implements Game{
 	public void prepareGameInstance()
 	{
 		selectedCards = new ArrayList<Cards>();
-		for (int i = 0; i < 4; i++)
-		{
-			selectedCards.add(getCard(generator.nextInt(52)));
+		if(!DEBUG) {
+			for (int i = 0; i < 4; i++)
+			{
+				selectedCards.add(getCard(generator.nextInt(52)));
+			}
 		}
-//		selectedCards.add(getCard(4));
-//		selectedCards.add(getCard(11));
-//		selectedCards.add(getCard(1));
-//		selectedCards.add(getCard(2));		
+		else {
+			selectedCards.add(getCard(4));
+			selectedCards.add(getCard(11));
+			selectedCards.add(getCard(1));
+			selectedCards.add(getCard(2));		
+		}
 	}
 
 	@Override

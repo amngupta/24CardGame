@@ -3,6 +3,7 @@ package server;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
+import java.util.Properties;
 
 import persistence.OnlineUserPersistence;
 import persistence.SQLOnlineUserPersistence;
@@ -12,16 +13,17 @@ import persistence.UserInfoPersistence;
 public class Persistence {
 	private UserInfoPersistence userInfoPersistence;
 	private OnlineUserPersistence onlineUserPersistence;
-	private static final String DB_HOST = "localhost";
-	private static final String DB_USER = "root";
-	private static final String DB_PASS = "rootroot";
-	private static final String DB_NAME = "agupta2";
-	
+
 
 	private Connection conn;
 	
-	Persistence() throws SQLException, InstantiationException, IllegalAccessException, ClassNotFoundException{
+	Persistence(Properties properties) throws SQLException, InstantiationException, IllegalAccessException, ClassNotFoundException{
 		Class.forName("com.mysql.jdbc.Driver").newInstance();
+		String DB_HOST = properties.getProperty("DB_HOST");
+		String DB_USER = properties.getProperty("DB_USER");
+		String DB_PASS = properties.getProperty("DB_PASS");
+		String DB_NAME = properties.getProperty("DB_NAME");
+		
 		conn = DriverManager.getConnection("jdbc:mysql://"+DB_HOST+
 				"/"+DB_NAME+
 				"?user="+DB_USER+

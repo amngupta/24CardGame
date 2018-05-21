@@ -4,20 +4,16 @@ import java.awt.Button;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.util.ArrayList;
 
-import javax.swing.ImageIcon;
-import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
-import javax.swing.JTextField;
 import javax.swing.SwingConstants;
-import javax.swing.border.EmptyBorder;
 
 import records.UserInfo;
 
 public class GameEnd extends SubPanel{
-	private UserInfo currentUser;
+
+	private static final long serialVersionUID = 1L;
 	private HomeFrame frame;
 	private GameClientStub gameClientStub;
 	private JLabel winnerInfoLabel;
@@ -28,7 +24,6 @@ public class GameEnd extends SubPanel{
 	 * @param gameClientStub2 
 	 */
 	public GameEnd(UserInfo currentUser, GameClientStub gameClientStub, HomeFrame frame) {
-		this.currentUser = currentUser;
 		this.frame = frame;		
 		this.gameClientStub = gameClientStub;
 	}

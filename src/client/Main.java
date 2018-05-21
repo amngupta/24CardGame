@@ -18,9 +18,10 @@ import javax.swing.SwingUtilities;
 import javax.swing.UIManager;
 
 import records.UserInfo;
+import server.PropertiesLoader;
 import server.RMIServerInterface;
 
-public class ClientLogin implements Runnable{
+public class Main implements Runnable{
 
 	private JFrame frame;
 	private JTextField usernameTextField;
@@ -31,22 +32,33 @@ public class ClientLogin implements Runnable{
 	private JButton registerButton;
 	private HomeFrame homePage;
 	private ClientRegister registerPage;
-
-	/**
+	private static final String DEFAULT_HOST = "127.0.0.1";
+	
+	/**z
 	 * Launch the application.
 	 */
 	public static void main(String[] args) {
-			SwingUtilities.invokeLater(new ClientLogin(""));		
+		
+		PropertiesLoader pl = new PropertiesLoader();
+		pl.loadProperties();
+		
+		String host = DEFAULT_HOST;
+		String service = pl.getProperty("RMI_SERVICE");
+		if (pl.getProperties().contains("SERVER_HOST")) {
+			host = pl.getProperty("SERVER_HOST");
+			System.out.println("Setting host: "+host);
+		}
+		SwingUtilities.invokeLater(new Main(host, service));		
 	}
 
 	
 	private RMIServerInterface serverObj;
 	private UserInfo currentUser;
 
-	public ClientLogin(String host) {
+	public Main(String host, String serviceName) {
 		try {
-	        Registry registry = LocateRegistry.getRegistry("localhost");
-	        serverObj = (RMIServerInterface) registry.lookup("24Cards");
+	        Registry registry = LocateRegistry.getRegistry(host);
+	        serverObj = (RMIServerInterface) registry.lookup(serviceName);
 		} 
 		catch(Exception e) {
 			System.err.println("Failed accessing RMI: "+ e);

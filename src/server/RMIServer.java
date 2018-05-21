@@ -19,7 +19,6 @@ public class RMIServer extends UnicastRemoteObject implements RMIServerInterface
 	
 	protected RMIServer() throws RemoteException {
 		super();
-		
 	}
 	
 	public void setPersistence(Persistence persistence) {

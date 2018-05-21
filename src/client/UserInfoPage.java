@@ -3,15 +3,16 @@ package client;
 import java.awt.Component;
 import java.awt.Font;
 import java.awt.GridLayout;
+
 import javax.swing.JFrame;
 import javax.swing.JLabel;
+import javax.swing.JPanel;
+import javax.swing.SwingConstants;
+import javax.swing.border.EmptyBorder;
+
 import records.UserInfo;
 import records.UserStatistics;
 import server.RMIServerInterface;
-import javax.swing.JPanel;
-import javax.swing.BoxLayout;
-import javax.swing.SwingConstants;
-import javax.swing.border.EmptyBorder;
 
 public class UserInfoPage extends  SubPanel{
 

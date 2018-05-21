@@ -27,9 +27,7 @@ import games.PostFix;
 import records.UserInfo;
 
 public class CardGameClient extends SubPanel {
-	/**
-	 * 
-	 */
+
 	private static final long serialVersionUID = 1L;
 	private JTextField AnswerField;
 	private UserInfo currentUser;
@@ -41,7 +39,6 @@ public class CardGameClient extends SubPanel {
 	private static final String pleaseWaitText = "Hold on while we connect you to other players...";
 	private HashSet<String> cardFaceValues = new HashSet<String>();
 	private List<Cards> cardFiles;
-	private Container opponentsInfoPanel;
 
 	private static final URL backCard = CardGameClient.class.getResource("/client/images/card_back.gif");
 	private JPanel opponentPanel;
@@ -72,6 +69,7 @@ public class CardGameClient extends SubPanel {
 		createClientWindow();
 	}
 
+	@SuppressWarnings("unused")
 	private void createGameRequest() {
 		// TODO Auto-generated method stub
 		gameClientStub.sendNewGameRequest();
@@ -148,29 +146,14 @@ public class CardGameClient extends SubPanel {
 		
 		PlayerPanel = new JPanel();
 		PlayerPanel.setBorder(new EmptyBorder(10, 10, 10, 10));
-		PlayerPanel.setLayout(new GridLayout(2, 1, 0, 0));
-		
+		PlayerPanel.setLayout(new GridLayout(1, 1, 0, 0));
+		opponentPanel = new JPanel();
+
 		GameStatusInfo = new JLabel();
 		GameStatusInfo.setHorizontalAlignment(SwingConstants.CENTER);
-		PlayerPanel.add(GameStatusInfo);
+//		PlayerPanel.add(GameStatusInfo);
 		this.setInfoText(pleaseWaitText);
 		SubmissionArea.add(PlayerPanel);
-		
-		opponentPanel = new JPanel();
-		FlowLayout flowLayout = (FlowLayout) opponentPanel.getLayout();
-		flowLayout.setVgap(10);
-		flowLayout.setHgap(10);
-		PlayerPanel.add(opponentPanel);
-		opponentLabel_1 = new JLabel("");
-		opponentPanel.add(opponentLabel_1);
-		this.opponentLabelList.add(opponentLabel_1);
-		opponentLabel_2 = new JLabel("");
-		opponentPanel.add(opponentLabel_2);
-		this.opponentLabelList.add(opponentLabel_2);
-
-		opponentLabel_3 = new JLabel("");
-		opponentPanel.add(opponentLabel_3);
-		this.opponentLabelList.add(opponentLabel_3);
 
 		setVisible(true);
 	}
@@ -182,12 +165,10 @@ public class CardGameClient extends SubPanel {
 			Cards card = cardFiles.get(i);
 			this.cardFaceValues.add(card.getFaceValue());
 			String fileName = String.format("/client/images/%s", card.getFileName());
-//			System.out.println(fileName);
 			URL resource = CardGameClient.class.getResource(fileName);
 			if (resource!= null) {
 				cardLabelList.get(i).setIcon(new ImageIcon(resource));
 			}
-//			cardLabelList.get(i).setText(card.getFaceValue());	
 		}		
 	}
 
@@ -198,48 +179,35 @@ public class CardGameClient extends SubPanel {
 
 	@Override
 	public void refreshInfo() {
+		System.out.print("Refreshing");
 		resetCards();
 		this.AnswerField.setText("");
-		PlayerPanel = new JPanel();
-		PlayerPanel.setBorder(new EmptyBorder(10, 10, 10, 10));
-		PlayerPanel.setLayout(new GridLayout(2, 1, 0, 0));
-		
-		GameStatusInfo = new JLabel();
-		GameStatusInfo.setHorizontalAlignment(SwingConstants.CENTER);
-		PlayerPanel.add(GameStatusInfo);
-		setInfoText(pleaseWaitText);
+		opponentPanel.removeAll();
 	}
-
-//	public void loadOpponentInfo(String name, UserInfo info) {
-//		// TODO Auto-generated method stub
-//		System.out.println(name + "   " + currentUser.getUsername());
-//		setInfoText("");
-//		if (!info.getUsername().equals(currentUser.getUsername())) {
-//			JLabel OpponentInfo = new JLabel();
-//			OpponentInfo.setHorizontalAlignment(SwingConstants.CENTER);
-//			PlayerPanel.add(OpponentInfo);
-//			OpponentInfo.setText(info.getUsername());
-//		}	
-//	}
 
 	public void addOpponentInfo(Map<String, UserInfo> message) {
-		this.setInfoText("");
 		AtomicInteger counter = new AtomicInteger(0);
-		message.forEach((name, info)-> {
-			if (name.equalsIgnoreCase(this.currentUser.getUsername())) {
-				System.out.println(name);
-				String labelString = String.format("<html>User: %s <br> Average Time: %s</html>", info.getUsername(), 
-						info.getUserStats().getAvgTime());
-				opponentLabelList.get(counter.get()).setText(labelString);
-				counter.addAndGet(1);
-
+		System.out.println(message.size());
+		for (UserInfo info : message.values()) {
+			try {
+				System.out.println(info.getUsername());
+				if (!info.getUsername().equals(currentUser.getUsername()))
+				{
+					String labelString = String.format("<html>User: %s <br> Average Time: %s</html>", info.getUsername(), 
+							info.getUserStats().getAvgTime());
+					counter.addAndGet(1);
+					JLabel opponentLabel = new JLabel(labelString);
+					opponentPanel.add(opponentLabel);	
+				}
 			}
-		});
-		PlayerPanel.add(opponentsInfoPanel);
-	}
-	
-	
-	
+			catch(Exception e)
+			{
+				e.printStackTrace();
+			}
+		}
+		PlayerPanel.add(opponentPanel);
+		setInfoText("Get Ready for 24!");
+	}	
 	
 	public void setInfoText(String text)
 	{
@@ -247,9 +215,9 @@ public class CardGameClient extends SubPanel {
 	}
 
 	public void activateGameEnd(String answer, String winningUser) {
+		frame.showPanel("gameEndWindow");
 		if (!winningUser.isEmpty())
 			((GameEnd) frame.getPanel("gameEndWindow")).setEndInfo(winningUser, answer);
-		frame.showPanel("gameEndWindow");
 	}
 
 	private void resetCards() {
@@ -284,7 +252,6 @@ public class CardGameClient extends SubPanel {
 	private boolean checkAnswer(String answer) {		
 		for (Character c : answer.toCharArray())
 		{
-			System.out.println("Here" + c);
 			if (!this.cardFaceValues.contains(c.toString())) {
 				return false;
 			}

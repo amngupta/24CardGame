@@ -1,6 +1,5 @@
 package games;
 
-import records.UserInfo;
 import server.Answer;
 
 public interface Game {

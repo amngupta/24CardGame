@@ -3,16 +3,9 @@ package server;
 import java.io.IOException;
 import java.time.Duration;
 import java.time.OffsetDateTime;
-import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
-
-import javax.jms.JMSException;
-import javax.jms.Message;
-import javax.jms.MessageListener;
-import javax.jms.ObjectMessage;
 
 import games.CardGame;
 import games.Cards;
@@ -20,9 +13,7 @@ import games.Game;
 import records.Messages;
 import records.Messages.MessageType;
 import records.UserInfo;
-import server.JMSHelper.JMSDestinationType;
 
-@SuppressWarnings("unchecked")
 public class GameSession{
 	private Map<String, UserInfo> sessionUsers;
 	private Game game;
@@ -85,10 +76,7 @@ public class GameSession{
 		else 
 		{
 			System.out.println("Incorrect Answer");
-		}
-		
-//		Update to persistence
-		
+		}		
 	}
 
 	public void readyToStart() {
@@ -148,13 +136,11 @@ public class GameSession{
 		try {
 			Messages<Map<String, UserInfo>> users = new Messages<>(MessageType.GAME_PLAYERS, sessionUsers);
 			gameComm.informClients(users);
-//			TODO	Fix the getSelectedCards stuff
 			Messages<List<Cards>> cards = new Messages<>(MessageType.START_GAME,  ((CardGame) game).getSelectedCards());
 			gameComm.informClients(cards);
 			System.out.println("Game Problem Sent");
 			gameInSession = true;
 		} catch (Exception e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}		
 	}

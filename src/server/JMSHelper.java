@@ -65,10 +65,8 @@ public class JMSHelper {
 
 		lookupQueue();
 		lookupTopic();
-		System.out.println("Topic & Queue Found");
 		// Create connection->session->sender
 		createConnection();
-
 	}
 	
 	private void createJNDIContext() throws NamingException {
@@ -121,26 +119,8 @@ public class JMSHelper {
 			throw e;
 		}
 	}
-	
-//	public void receiveMessages(JMSDestinationType dest, String selector) throws JMSException {		
-//		createSession();
-//		if (dest == JMSDestinationType.QUEUE)
-//			createReceiver(queue, selector);
-//		else if (dest == JMSDestinationType.TOPIC)
-//			createReceiver(topic, selector);
-//		
-//		
-//		while(true) {
-//			Message m = receiver.receive();
-//			if(m != null && m instanceof TextMessage) {
-//				TextMessage textMessage = (TextMessage)m;
-//				System.out.println("Received message: "+textMessage.getText());
-//			} else {
-//				break;
-//			}
-//		}
-//	}
-	
+
+	@SuppressWarnings("rawtypes")
 	public void sendMessage(Messages message, JMSDestinationType type) throws JMSException
 	{
 		Message m;

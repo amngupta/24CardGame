@@ -7,6 +7,8 @@ import javax.swing.table.AbstractTableModel;
 import records.UserStatistics;
 
 public class LeaderboardModel extends AbstractTableModel {
+	private static final long serialVersionUID = 1L;
+
 	private final List<UserStatistics> leaderboardList;
     
 	private static final String[] columnNames = {
@@ -18,7 +20,8 @@ public class LeaderboardModel extends AbstractTableModel {
             "Average Time (s)"};
 
 	
-    private final Class[] columnClass = new Class[] {
+    @SuppressWarnings("rawtypes")
+	private final Class[] columnClass = new Class[] {
         Integer.class, String.class, Integer.class, Integer.class, float.class, float.class
     };
 

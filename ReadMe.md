@@ -55,10 +55,8 @@
 
 
 ### New Game & End Game Screens
-
-![](./media/image8.png){width="3.1932895888013997in"
-height="2.5729166666666665in"}![](./media/image9.png){width="3.1875in"
-height="2.57754593175853in"}
+![](./media/image8.png)
+![](./media/image9.png)
 
 ### Session Terminate on Opponent Exit
 
